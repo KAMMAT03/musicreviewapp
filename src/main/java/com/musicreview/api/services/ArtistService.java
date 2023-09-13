@@ -1,5 +1,5 @@
 package com.musicreview.api.services;
 
-public interface ReviewService {
+public interface ArtistService {
 
 }

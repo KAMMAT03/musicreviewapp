@@ -2,6 +2,8 @@ package com.musicreview.api.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class ReviewDTO {
     private long id;
@@ -11,4 +13,5 @@ public class ReviewDTO {
     private String content;
     private int score;
     private int likes;
+    private Date dateOfPublication;
 }
