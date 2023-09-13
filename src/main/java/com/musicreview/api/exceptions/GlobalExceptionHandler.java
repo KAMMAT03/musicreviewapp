@@ -11,7 +11,18 @@ import java.util.Date;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(ReviewNotFoundException.class)
-    public ResponseEntity<ErrorObject> handlePokemonNotFoundException(ReviewNotFoundException exception, WebRequest request){
+    public ResponseEntity<ErrorObject> handleReviewNotFoundException(ReviewNotFoundException exception, WebRequest request){
+        ErrorObject errorObject = new ErrorObject();
+
+        errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
+        errorObject.setMessage(exception.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AlbumNotFoundException.class)
+    public ResponseEntity<ErrorObject> handleAlbumNotFoundException(AlbumNotFoundException exception, WebRequest request){
         ErrorObject errorObject = new ErrorObject();
 
         errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
