@@ -25,4 +25,9 @@ public class AlbumController {
     public ResponseEntity<List<AlbumDTO>> searchForAlbum(@PathVariable(value = "token") String token, @PathVariable(value = "content") String content){
         return new ResponseEntity<>(albumService.searchAlbum(content, token), HttpStatus.OK);
     }
+
+    @GetMapping("get-album/{token}/{id}")
+    public ResponseEntity<AlbumDTO> getAlbumById(@PathVariable(value = "token") String token, @PathVariable(value = "id") String id){
+        return new ResponseEntity<>(albumService.getAlbumById(id, token), HttpStatus.OK);
+    }
 }
