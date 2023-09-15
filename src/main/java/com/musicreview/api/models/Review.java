@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Data
 @Entity
 @AllArgsConstructor
@@ -16,10 +20,10 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private long albumId;
-    private long artistId;
+    private String albumId;
     private String title;
     private String content;
     private int score;
     private int likes;
+    private LocalDateTime dateOfPublication;
 }
