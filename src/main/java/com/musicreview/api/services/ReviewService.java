@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface ReviewService {
     ReviewResponse getReviewsByAlbumId(String albumId, int pageNo, int pageSize);
-    List<ReviewDTO> getReviewsByUserId(String UserId, int pageNo, int pageSize);
+    List<ReviewDTO> getReviewsByUserId(String userId, int pageNo, int pageSize);
     ReviewDTO createReview(ReviewDTO reviewDTO);
-    ReviewDTO updateReview(ReviewDTO reviewDTO, String reviewId);
+    ReviewDTO updateReview(ReviewDTO reviewDTO, long reviewId);
     void deleteReview(String reviewId);
 
 }

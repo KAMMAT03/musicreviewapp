@@ -24,10 +24,17 @@ public class ReviewController {
     }
 
     @GetMapping("{albumId}/reviews")
-    public ResponseEntity<ReviewResponse> getReviewsByAlbumId(@PathVariable("albumId") String albumId,
+    public ResponseEntity<ReviewResponse> getReviewsByAlbumId(@PathVariable(value = "albumId") String albumId,
                           @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
                               @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ){
         return new ResponseEntity<>(reviewService.getReviewsByAlbumId(albumId, pageNo, pageSize), HttpStatus.OK);
+    }
+
+    @PutMapping("{reviewId}/update")
+    public ResponseEntity<ReviewDTO> updateReview(@PathVariable(value = "reviewId") long reviewId,
+                                                  @RequestBody ReviewDTO reviewDTO
+    ){
+        return new ResponseEntity<>(reviewService.updateReview(reviewDTO, reviewId), HttpStatus.OK);
     }
 }

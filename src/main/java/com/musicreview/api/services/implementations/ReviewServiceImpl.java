@@ -2,6 +2,7 @@ package com.musicreview.api.services.implementations;
 
 import com.musicreview.api.dto.ReviewDTO;
 import com.musicreview.api.dto.ReviewResponse;
+import com.musicreview.api.exceptions.ReviewNotFoundException;
 import com.musicreview.api.models.Review;
 import com.musicreview.api.repositories.ReviewRepository;
 import com.musicreview.api.services.ReviewService;
@@ -36,7 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDTO> getReviewsByUserId(String UserId, int pageNo, int pageSize) {
+    public List<ReviewDTO> getReviewsByUserId(String userId, int pageNo, int pageSize) {
         return null;
     }
 
@@ -48,8 +49,17 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDTO updateReview(ReviewDTO reviewDTO, String reviewId) {
-        return null;
+    public ReviewDTO updateReview(ReviewDTO reviewDTO, long reviewId) {
+        Review review = reviewRepository.findById(reviewId).
+                orElseThrow(() -> new ReviewNotFoundException("Could not update this review because it does not exist"));
+
+        if (reviewDTO.getScore() != 0) review.setScore(reviewDTO.getScore());
+        if (reviewDTO.getContent() != null) review.setContent(reviewDTO.getContent());
+        if (reviewDTO.getTitle() != null) review.setTitle(reviewDTO.getTitle());
+
+        Review updatedReview = reviewRepository.save(review);
+
+        return mapToDTO(updatedReview);
     }
 
     @Override

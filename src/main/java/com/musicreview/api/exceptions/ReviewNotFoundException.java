@@ -5,4 +5,7 @@ public class ReviewNotFoundException extends RuntimeException{
     public ReviewNotFoundException(){
         super("No review found for this album");
     }
+    public ReviewNotFoundException(String message){
+        super(message);
+    }
 }

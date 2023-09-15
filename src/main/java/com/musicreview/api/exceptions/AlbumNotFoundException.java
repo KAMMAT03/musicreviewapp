@@ -5,4 +5,7 @@ public class AlbumNotFoundException extends RuntimeException{
     public AlbumNotFoundException(){
         super("Could not find any album matching the given phrase");
     }
+    public AlbumNotFoundException(String message){
+        super(message);
+    }
 }
