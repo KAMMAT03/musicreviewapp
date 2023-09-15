@@ -9,6 +9,6 @@ import java.util.List;
 public class ArtistDTO {
     private String id;
     private String name;
-    private List<AlbumDTO> albums;
     private String imageUrl;
+    private List<AlbumDTO> albums;
 }

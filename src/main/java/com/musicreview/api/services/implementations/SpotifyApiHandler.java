@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class SpotifyApiHandler {
 
-    public static String spotifyApiGetRequest(String searchContent, String token){
+    public static String spotifyApiGetResponse(String searchContent, String token){
         String responseBody;
         try {
             String apiUrl = "https://api.spotify.com/v1/" + searchContent;
@@ -56,41 +56,61 @@ public class SpotifyApiHandler {
     }
 
     public static List<AlbumDTO> extractAlbums(String response){
-        List<AlbumDTO> albumDTOList = new ArrayList<>();
-
         JsonElement jsonElement = JsonParser.parseString(response);
 
         JsonObject albumsObject = Optional.ofNullable(jsonElement.getAsJsonObject().
                         getAsJsonObject("albums")).
                 orElseThrow(AlbumNotFoundException::new);
 
-        JsonArray itemsArray = Optional.ofNullable(albumsObject.getAsJsonArray("items")).
-                orElseThrow(AlbumNotFoundException::new);
-
-        for (JsonElement item : itemsArray){
-            albumDTOList.add(extractAlbumDto(item.getAsJsonObject(), false));
-        }
-        return albumDTOList;
+        return getAlbums(albumsObject);
     }
 
     public static AlbumDTO extractAlbumDetailed(String response){
         JsonObject jsonObject = Optional.ofNullable(JsonParser.parseString(response).getAsJsonObject()).
                 orElseThrow(AlbumNotFoundException::new);
 
-        return extractAlbumDto(jsonObject, true);
+        return getAlbumDto(jsonObject, true);
     }
 
-    public static AlbumDTO extractAlbumDto(JsonObject jsonObject, boolean detailed){
+    public static ArtistDTO extractArtistById(String response, String token){
+        JsonElement artistElement = Optional.ofNullable(JsonParser.parseString(response)).
+                orElseThrow(AlbumNotFoundException::new);
+
+        ArtistDTO artistDTO =  getArtistDTO(artistElement, true);
+
+        String searchContent = "artists/" + artistDTO.getId() + "/albums?include_groups=album&market=PL";
+        response = SpotifyApiHandler.spotifyApiGetResponse(searchContent, token);
+
+        JsonObject albumsObject = Optional.ofNullable(JsonParser.parseString(response).getAsJsonObject()).
+                orElseThrow(AlbumNotFoundException::new);
+
+        artistDTO.setAlbums(getAlbums(albumsObject));
+
+        return artistDTO;
+    }
+
+    private static List<AlbumDTO> getAlbums(JsonObject albumsObject){
+
+        List<AlbumDTO> albumDTOList = new ArrayList<>();
+
+        JsonArray itemsArray = Optional.ofNullable(albumsObject.getAsJsonArray("items")).
+                orElseThrow(AlbumNotFoundException::new);
+
+        for (JsonElement item : itemsArray){
+            JsonObject itemObject = Optional.ofNullable(item.getAsJsonObject()).
+                    orElseThrow(AlbumNotFoundException::new);
+
+            albumDTOList.add(getAlbumDto(itemObject, false));
+        }
+        return albumDTOList;
+    }
+
+    private static AlbumDTO getAlbumDto(JsonObject jsonObject, boolean detailed){
         AlbumDTO albumDTO = new AlbumDTO();
 
         String name = jsonObject.get("name").getAsString();
         String id = jsonObject.get("id").getAsString();
-
-        JsonObject imageObject = Optional.ofNullable(jsonObject.
-                        getAsJsonArray("images")).orElseThrow(AlbumNotFoundException::new).
-                get(0).getAsJsonObject();
-
-        String imageUrl = imageObject.get("url").getAsString();
+        String imageUrl = getImageUrl(jsonObject);
 
         List<ArtistDTO> artistDTOList = getListArtistDTO(jsonObject);
 
@@ -112,7 +132,7 @@ public class SpotifyApiHandler {
         return albumDTO;
     }
 
-    public static ArtistDTO getArtistDTO(JsonElement artist) {
+    private static ArtistDTO getArtistDTO(JsonElement artist, boolean detailed) {
         JsonObject artistObject = Optional.ofNullable(artist.getAsJsonObject()).
                 orElseThrow(AlbumNotFoundException::new);
 
@@ -120,6 +140,8 @@ public class SpotifyApiHandler {
         String artistName = artistObject.get("name").getAsString();
 
         ArtistDTO artistDTO = new ArtistDTO();
+
+        if (detailed) artistDTO.setImageUrl(getImageUrl(artistObject));
 
         artistDTO.setName(artistName);
         artistDTO.setId(artistId);
@@ -133,12 +155,20 @@ public class SpotifyApiHandler {
         List<ArtistDTO> artistDTOList = new ArrayList<>();
 
         for (JsonElement artist : artistsArray){
-            ArtistDTO artistDTO = getArtistDTO(artist);
+            ArtistDTO artistDTO = getArtistDTO(artist, false);
 
             artistDTOList.add(artistDTO);
         }
 
         return artistDTOList;
+    }
+
+    private static String getImageUrl(JsonObject jsonObject){
+        JsonObject imageObject = Optional.ofNullable(jsonObject.
+                        getAsJsonArray("images")).orElseThrow(AlbumNotFoundException::new).
+                get(0).getAsJsonObject();
+
+        return imageObject.get("url").getAsString();
     }
 
     private static List<TrackDTO> getTrackList(JsonObject jsonObject){

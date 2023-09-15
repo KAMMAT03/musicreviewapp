@@ -1,5 +1,7 @@
 package com.musicreview.api.services;
 
-public interface ArtistService {
+import com.musicreview.api.dto.ArtistDTO;
 
+public interface ArtistService {
+    ArtistDTO getArtistById(String id, String token);
 }
