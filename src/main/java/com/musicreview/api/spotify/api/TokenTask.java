@@ -51,8 +51,8 @@ public class TokenTask {
     private static HttpURLConnection getHttpURLConnection() throws IOException {
         String endpoint = "https://accounts.spotify.com/api/token";
 
-        String clientId = "9ea6bad7c5f34481b2f71e174af400a9";
-        String clientSecret = "685e6e2b6779492c9ade30922a00b9c9";
+        String clientId = "secretid";
+        String clientSecret = "secretkey";
 
         URL url = new URL(endpoint);
 
