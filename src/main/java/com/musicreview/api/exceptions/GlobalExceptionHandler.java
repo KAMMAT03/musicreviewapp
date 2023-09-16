@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
         errorObject.setMessage(exception.getMessage());
         errorObject.setTimestamp(new Date());
 
-        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(AlbumNotFoundException.class)
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
         errorObject.setMessage(exception.getMessage());
         errorObject.setTimestamp(new Date());
 
-        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(TokenException.class)
@@ -40,6 +40,6 @@ public class GlobalExceptionHandler {
         errorObject.setMessage(exception.getMessage());
         errorObject.setTimestamp(new Date());
 
-        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.SERVICE_UNAVAILABLE);
+        return new ResponseEntity<>(errorObject, HttpStatus.SERVICE_UNAVAILABLE);
     }
 }

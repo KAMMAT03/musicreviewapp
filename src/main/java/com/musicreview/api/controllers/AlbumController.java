@@ -19,14 +19,12 @@ public class AlbumController {
     }
 
     @GetMapping("search")
-    public ResponseEntity<List<AlbumDTO>> searchForAlbum(@RequestParam(value = "token", defaultValue = "") String token,
-                                                         @RequestParam(value = "content", defaultValue = "") String content){
-        return new ResponseEntity<>(albumService.searchAlbum(content, token), HttpStatus.OK);
+    public ResponseEntity<List<AlbumDTO>> searchForAlbum(@RequestParam(value = "content", defaultValue = "") String content){
+        return new ResponseEntity<>(albumService.searchAlbum(content), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AlbumDTO> getAlbumById(@RequestParam(value = "token", defaultValue = "") String token,
-                                                 @PathVariable(value = "id") String id){
-        return new ResponseEntity<>(albumService.getAlbumById(id, token), HttpStatus.OK);
+    public ResponseEntity<AlbumDTO> getAlbumById(@PathVariable(value = "id") String id){
+        return new ResponseEntity<>(albumService.getAlbumById(id), HttpStatus.OK);
     }
 }

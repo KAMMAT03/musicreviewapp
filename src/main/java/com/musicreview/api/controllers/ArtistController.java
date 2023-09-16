@@ -18,8 +18,7 @@ public class ArtistController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ArtistDTO> getArtistById(@RequestParam(value = "token", defaultValue = "") String token,
-                                                   @PathVariable(value = "id") String id){
-        return new ResponseEntity<>(artistService.getArtistById(id, token), HttpStatus.OK);
+    public ResponseEntity<ArtistDTO> getArtistById(@PathVariable(value = "id") String id){
+        return new ResponseEntity<>(artistService.getArtistById(id), HttpStatus.OK);
     }
 }

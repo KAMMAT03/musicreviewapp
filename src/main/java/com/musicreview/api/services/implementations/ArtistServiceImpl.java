@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ArtistServiceImpl implements ArtistService {
     @Override
-    public ArtistDTO getArtistById(String id, String token) {
+    public ArtistDTO getArtistById(String id) {
         String searchContent = "artists/" + id;
-        String response = SpotifyApiHandler.spotifyApiGetResponse(searchContent, token);
+        String response = SpotifyApiHandler.spotifyApiGetResponse(searchContent);
 
-        return SpotifyApiHandler.extractArtistById(response, token);
+        return SpotifyApiHandler.extractArtistById(response);
     }
 }

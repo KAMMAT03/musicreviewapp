@@ -9,17 +9,17 @@ import java.util.List;
 @Service
 public class AlbumServiceImpl implements AlbumService {
     @Override
-    public List<AlbumDTO> searchAlbum(String searchPhrase, String token) {
+    public List<AlbumDTO> searchAlbum(String searchPhrase) {
         String searchContent = "search?q=" + searchPhrase + "&type=album&market=PL&limit=10";
-        String response = SpotifyApiHandler.spotifyApiGetResponse(searchContent, token);
+        String response = SpotifyApiHandler.spotifyApiGetResponse(searchContent);
 
         return SpotifyApiHandler.extractAlbums(response);
     }
 
     @Override
-    public AlbumDTO getAlbumById(String id, String token) {
+    public AlbumDTO getAlbumById(String id) {
         String searchContent = "albums/" + id + "?market=PL";
-        String response = SpotifyApiHandler.spotifyApiGetResponse(searchContent, token);
+        String response = SpotifyApiHandler.spotifyApiGetResponse(searchContent);
 
         return SpotifyApiHandler.extractAlbumDetailed(response);
     }

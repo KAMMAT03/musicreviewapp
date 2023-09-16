@@ -8,6 +8,8 @@ import com.musicreview.api.dto.AlbumDTO;
 import com.musicreview.api.dto.ArtistDTO;
 import com.musicreview.api.dto.TrackDTO;
 import com.musicreview.api.exceptions.AlbumNotFoundException;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,8 +22,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class SpotifyApiHandler {
+    @Getter
+    @Setter
+    private static String token;
 
-    public static String spotifyApiGetResponse(String searchContent, String token){
+    public static String spotifyApiGetResponse(String searchContent){
         String responseBody;
         try {
             String apiUrl = "https://api.spotify.com/v1/" + searchContent;
@@ -72,14 +77,14 @@ public class SpotifyApiHandler {
         return getAlbumDto(jsonObject, true);
     }
 
-    public static ArtistDTO extractArtistById(String response, String token){
+    public static ArtistDTO extractArtistById(String response){
         JsonElement artistElement = Optional.ofNullable(JsonParser.parseString(response)).
                 orElseThrow(AlbumNotFoundException::new);
 
         ArtistDTO artistDTO =  getArtistDTO(artistElement, true);
 
         String searchContent = "artists/" + artistDTO.getId() + "/albums?include_groups=album&market=PL";
-        response = SpotifyApiHandler.spotifyApiGetResponse(searchContent, token);
+        response = SpotifyApiHandler.spotifyApiGetResponse(searchContent);
 
         JsonObject albumsObject = Optional.ofNullable(JsonParser.parseString(response).getAsJsonObject()).
                 orElseThrow(AlbumNotFoundException::new);
