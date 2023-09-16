@@ -1,7 +1,7 @@
 package com.musicreview.api.services.implementations;
 
 import com.musicreview.api.dto.ReviewDTO;
-import com.musicreview.api.dto.ReviewResponse;
+import com.musicreview.api.responses.ReviewResponse;
 import com.musicreview.api.exceptions.ReviewNotFoundException;
 import com.musicreview.api.models.Review;
 import com.musicreview.api.repositories.ReviewRepository;

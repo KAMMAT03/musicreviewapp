@@ -1,7 +1,7 @@
 package com.musicreview.api.services;
 
 import com.musicreview.api.dto.ReviewDTO;
-import com.musicreview.api.dto.ReviewResponse;
+import com.musicreview.api.responses.ReviewResponse;
 
 import java.util.List;
 

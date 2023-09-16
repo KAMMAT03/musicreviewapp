@@ -1,12 +1,13 @@
-package com.musicreview.api.dto;
+package com.musicreview.api.responses;
 
+import com.musicreview.api.dto.AlbumDTO;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ReviewResponse {
-    private List<ReviewDTO> content;
+public class AlbumResponse {
+    private List<AlbumDTO> content;
     private int pageNo;
     private int pageSize;
     private long totalElements;

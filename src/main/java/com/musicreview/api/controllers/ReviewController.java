@@ -1,7 +1,7 @@
 package com.musicreview.api.controllers;
 
 import com.musicreview.api.dto.ReviewDTO;
-import com.musicreview.api.dto.ReviewResponse;
+import com.musicreview.api.responses.ReviewResponse;
 import com.musicreview.api.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
