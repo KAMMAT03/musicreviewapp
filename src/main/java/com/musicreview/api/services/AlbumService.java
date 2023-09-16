@@ -1,10 +1,9 @@
 package com.musicreview.api.services;
 
 import com.musicreview.api.dto.AlbumDTO;
-
-import java.util.List;
+import com.musicreview.api.responses.AlbumResponse;
 
 public interface AlbumService {
-    List<AlbumDTO> searchAlbum(String searchPhrase);
+    AlbumResponse searchAlbum(String searchPhrase, int pageNo, int pageSize);
     AlbumDTO getAlbumById(String id);
 }
