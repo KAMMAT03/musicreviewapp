@@ -2,6 +2,7 @@ package com.musicreview.api.services.implementations;
 
 import com.musicreview.api.dto.ArtistDTO;
 import com.musicreview.api.services.ArtistService;
+import com.musicreview.api.spotify.api.SpotifyApiHandler;
 import org.springframework.stereotype.Service;
 
 @Service

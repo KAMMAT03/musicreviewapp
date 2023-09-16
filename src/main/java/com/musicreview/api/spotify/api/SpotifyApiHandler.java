@@ -1,4 +1,4 @@
-package com.musicreview.api.services.implementations;
+package com.musicreview.api.spotify.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
