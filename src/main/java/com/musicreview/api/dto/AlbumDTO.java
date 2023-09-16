@@ -13,5 +13,4 @@ public class AlbumDTO {
     private LocalDate releaseDate;
     private String imageUrl;
     private List<TrackDTO> trackList;
-    private List<ReviewDTO> reviews;
 }
