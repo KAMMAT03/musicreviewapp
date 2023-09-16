@@ -17,13 +17,18 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @PostMapping("create-review")
+    @PostMapping("reviews/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO){
         return new ResponseEntity<>(reviewService.createReview(reviewDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping("{albumId}/reviews")
+    @GetMapping("reviews/{reviewId}")
+    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable(value = "reviewId") long reviewId){
+        return new ResponseEntity<>(reviewService.getReviewById(reviewId), HttpStatus.OK);
+    }
+
+    @GetMapping("albums/{albumId}/reviews")
     public ResponseEntity<ReviewResponse> getReviewsByAlbumId(@PathVariable(value = "albumId") String albumId,
                           @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
                               @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
@@ -31,10 +36,16 @@ public class ReviewController {
         return new ResponseEntity<>(reviewService.getReviewsByAlbumId(albumId, pageNo, pageSize), HttpStatus.OK);
     }
 
-    @PutMapping("{reviewId}/update")
+    @PutMapping("reviews/{reviewId}/update")
     public ResponseEntity<ReviewDTO> updateReview(@PathVariable(value = "reviewId") long reviewId,
                                                   @RequestBody ReviewDTO reviewDTO
     ){
         return new ResponseEntity<>(reviewService.updateReview(reviewDTO, reviewId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("reviews/{reviewId}/delete")
+    public ResponseEntity<String> deleteReview(@PathVariable(value = "reviewId") long reviewId){
+        reviewService.deleteReview(reviewId);
+        return new ResponseEntity<>("Review deleted successfully", HttpStatus.OK);
     }
 }

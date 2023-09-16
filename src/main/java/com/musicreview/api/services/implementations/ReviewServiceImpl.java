@@ -42,6 +42,14 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public ReviewDTO getReviewById(long reviewId) {
+        Review review = reviewRepository.findById(reviewId).
+                orElseThrow(() -> new ReviewNotFoundException("There is no review with this id"));
+
+        return mapToDTO(review);
+    }
+
+    @Override
     public ReviewDTO createReview(ReviewDTO reviewDTO) {
         reviewDTO.setDateOfPublication(LocalDateTime.now());
         Review review = reviewRepository.save(mapToEntity(reviewDTO));
@@ -63,8 +71,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void deleteReview(String reviewId) {
+    public void deleteReview(long reviewId) {
+        Review review = reviewRepository.findById(reviewId).
+                orElseThrow(() -> new ReviewNotFoundException("Could not delete this review because it does not exist"));
 
+        reviewRepository.delete(review);
     }
 
     private ReviewDTO mapToDTO(Review review){
