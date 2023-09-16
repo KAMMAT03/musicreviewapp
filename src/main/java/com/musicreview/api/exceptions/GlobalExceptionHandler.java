@@ -31,4 +31,15 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<ErrorObject> handleTokenException(TokenException exception, WebRequest request){
+        ErrorObject errorObject = new ErrorObject();
+
+        errorObject.setStatusCode(HttpStatus.SERVICE_UNAVAILABLE.value());
+        errorObject.setMessage(exception.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }
