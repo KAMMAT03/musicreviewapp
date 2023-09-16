@@ -19,6 +19,6 @@ public class TokenTaskScheduler {
     @Scheduled(fixedRate = 3400000)
     public void runPeriodically(){
         tokenTask.getTokenFromApi();
-        logger.info("Token acquired successfully" + SpotifyApiHandler.getToken());
+        logger.info("Token acquired successfully");
     }
 }
