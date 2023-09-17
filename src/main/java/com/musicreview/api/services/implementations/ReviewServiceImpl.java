@@ -50,8 +50,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewResponse getReviewsByUserId(long userId, int pageNo, int pageSize) {
+    public ReviewResponse getReviewsByUsername(String username, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        UserEntity userEntity = userRepository.findByUsername(username).
+                orElseThrow(() -> new UsernameNotFoundException("There is no account with such username!"));
+        long userId = userEntity.getId();
+
         Page<Review> reviews = reviewRepository.findAllByUserId(userId, pageable);
         List<Review> reviewList = reviews.getContent();
         List<ReviewDTO> content = reviewList.stream().map(this::mapToDTO).toList();

@@ -37,12 +37,12 @@ public class ReviewController {
         return new ResponseEntity<>(reviewService.getReviewsByAlbumId(albumId, pageNo, pageSize), HttpStatus.OK);
     }
 
-    @GetMapping("users/{userId}/reviews")
-    public ResponseEntity<ReviewResponse> getReviewsByUserId(@PathVariable(value = "userId") long userId,
+    @GetMapping("users/{username}/reviews")
+    public ResponseEntity<ReviewResponse> getReviewsByUserId(@PathVariable(value = "username") String username,
                                   @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
                                   @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ){
-        return new ResponseEntity<>(reviewService.getReviewsByUserId(userId, pageNo, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(reviewService.getReviewsByUsername(username, pageNo, pageSize), HttpStatus.OK);
     }
 
     @PutMapping("reviews/{reviewId}/update")

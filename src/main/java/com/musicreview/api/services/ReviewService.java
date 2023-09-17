@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface ReviewService {
     ReviewResponse getReviewsByAlbumId(String albumId, int pageNo, int pageSize);
-    ReviewResponse getReviewsByUserId(long userId, int pageNo, int pageSize);
+    ReviewResponse getReviewsByUsername(String username, int pageNo, int pageSize);
     ReviewDTO getReviewById(long reviewId);
     ReviewDTO createReview(ReviewDTO reviewDTO, HttpServletRequest request);
     ReviewDTO updateReview(ReviewDTO reviewDTO, long reviewId, HttpServletRequest request);
