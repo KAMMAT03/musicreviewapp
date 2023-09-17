@@ -18,13 +18,10 @@ import java.io.IOException;
 @Component
 @NoArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
-    private TokenGenerator tokenGenerator;
-    private CustomUserDetailsService customUserDetailsService;
     @Autowired
-    public JWTAuthenticationFilter(TokenGenerator tokenGenerator, CustomUserDetailsService customUserDetailsService) {
-        this.tokenGenerator = tokenGenerator;
-        this.customUserDetailsService = customUserDetailsService;
-    }
+    private TokenGenerator tokenGenerator;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -46,7 +43,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getJWTFromRequest(HttpServletRequest request){
+    public static String getJWTFromRequest(HttpServletRequest request){
         String bearerToken = request.getHeader("Authorization");
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))

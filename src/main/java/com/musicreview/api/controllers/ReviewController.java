@@ -3,6 +3,7 @@ package com.musicreview.api.controllers;
 import com.musicreview.api.dto.ReviewDTO;
 import com.musicreview.api.responses.ReviewResponse;
 import com.musicreview.api.services.ReviewService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class ReviewController {
 
     @PostMapping("reviews/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO){
-        return new ResponseEntity<>(reviewService.createReview(reviewDTO), HttpStatus.CREATED);
+    public ResponseEntity<ReviewDTO> createReview(HttpServletRequest request, @RequestBody ReviewDTO reviewDTO){
+        return new ResponseEntity<>(reviewService.createReview(reviewDTO, request), HttpStatus.CREATED);
     }
 
     @GetMapping("reviews/{reviewId}")
@@ -37,9 +38,11 @@ public class ReviewController {
     }
 
     @PutMapping("reviews/{reviewId}/update")
-    public ResponseEntity<ReviewDTO> updateReview(@PathVariable(value = "reviewId") long reviewId,
+    public ResponseEntity<ReviewDTO> updateReview(HttpServletRequest request,
+                                                  @PathVariable(value = "reviewId") long reviewId,
                                                   @RequestBody ReviewDTO reviewDTO
     ){
+
         return new ResponseEntity<>(reviewService.updateReview(reviewDTO, reviewId), HttpStatus.OK);
     }
 

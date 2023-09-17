@@ -1,26 +1,45 @@
 package com.musicreview.api.services.implementations;
 
 import com.musicreview.api.dto.ReviewDTO;
+import com.musicreview.api.dto.UserDTO;
+import com.musicreview.api.models.UserEntity;
+import com.musicreview.api.repositories.UserRepository;
 import com.musicreview.api.responses.ReviewResponse;
 import com.musicreview.api.exceptions.ReviewNotFoundException;
 import com.musicreview.api.models.Review;
 import com.musicreview.api.repositories.ReviewRepository;
+import com.musicreview.api.security.TokenGenerator;
 import com.musicreview.api.services.ReviewService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.net.http.HttpRequest;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.musicreview.api.security.JWTAuthenticationFilter.getJWTFromRequest;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private ReviewRepository reviewRepository;
+    private TokenGenerator tokenGenerator;
+    private UserRepository userRepository;
     @Autowired
-    public ReviewServiceImpl(ReviewRepository reviewRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, TokenGenerator tokenGenerator,
+                             UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
+        this.tokenGenerator = tokenGenerator;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -50,10 +69,22 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDTO createReview(ReviewDTO reviewDTO) {
+    public ReviewDTO createReview(ReviewDTO reviewDTO, HttpServletRequest request) {
         reviewDTO.setDateOfPublication(LocalDateTime.now());
-        Review review = reviewRepository.save(mapToEntity(reviewDTO));
-        return mapToDTO(review);
+
+        Review review = mapToEntity(reviewDTO);
+
+        String token = getJWTFromRequest(request);
+        String username = tokenGenerator.getUsernameFromJWT(token);
+
+        UserEntity user = userRepository.findByUsername(username).
+                    orElseThrow(() -> new UsernameNotFoundException("This user does not exist"));
+
+        review.setUser(user);
+
+        Review newReview = reviewRepository.save(review);
+
+        return mapToDTO(newReview);
     }
 
     @Override
@@ -84,6 +115,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewDTO.setLikes(review.getLikes());
         reviewDTO.setContent(review.getContent());
         reviewDTO.setScore(review.getScore());
+        reviewDTO.setUsername(review.getUser().getUsername());
         reviewDTO.setAlbumId(review.getAlbumId());
         reviewDTO.setDateOfPublication(review.getDateOfPublication());
         reviewDTO.setTitle(review.getTitle());
