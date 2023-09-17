@@ -42,4 +42,15 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorObject, HttpStatus.SERVICE_UNAVAILABLE);
     }
+
+    @ExceptionHandler(CustomAuthorisationException.class)
+    public ResponseEntity<ErrorObject> handleCustomAuthorisationException(CustomAuthorisationException exception, WebRequest request){
+        ErrorObject errorObject = new ErrorObject();
+
+        errorObject.setStatusCode(HttpStatus.SERVICE_UNAVAILABLE.value());
+        errorObject.setMessage(exception.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<>(errorObject, HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }
