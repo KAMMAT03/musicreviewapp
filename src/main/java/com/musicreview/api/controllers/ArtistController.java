@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/artist/")
 public class ArtistController {
-    private ArtistService artistService;
+    private final ArtistService artistService;
     @Autowired
     public ArtistController(ArtistService artistService) {
         this.artistService = artistService;

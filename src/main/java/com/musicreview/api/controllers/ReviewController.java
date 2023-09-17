@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/")
 public class ReviewController {
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
     @Autowired
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;

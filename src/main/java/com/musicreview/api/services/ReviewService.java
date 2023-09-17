@@ -4,9 +4,6 @@ import com.musicreview.api.dto.ReviewDTO;
 import com.musicreview.api.responses.ReviewResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.net.http.HttpRequest;
-import java.util.List;
-
 public interface ReviewService {
     ReviewResponse getReviewsByAlbumId(String albumId, int pageNo, int pageSize);
     ReviewResponse getReviewsByUserId(long userId, int pageNo, int pageSize);

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/albums/")
 public class AlbumController {
-    private AlbumService albumService;
+    private final AlbumService albumService;
     @Autowired
     public AlbumController(AlbumService albumService) {
         this.albumService = albumService;

@@ -1,9 +1,7 @@
 package com.musicreview.api.services.implementations;
 
 import com.musicreview.api.dto.ReviewDTO;
-import com.musicreview.api.dto.UserDTO;
 import com.musicreview.api.exceptions.CustomAuthorisationException;
-import com.musicreview.api.exceptions.TokenException;
 import com.musicreview.api.models.UserEntity;
 import com.musicreview.api.repositories.UserRepository;
 import com.musicreview.api.responses.ReviewResponse;
@@ -20,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,9 +25,9 @@ import static com.musicreview.api.security.JWTAuthenticationFilter.getJWTFromReq
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
-    private ReviewRepository reviewRepository;
-    private TokenGenerator tokenGenerator;
-    private UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
+    private final TokenGenerator tokenGenerator;
+    private final UserRepository userRepository;
     @Autowired
     public ReviewServiceImpl(ReviewRepository reviewRepository, TokenGenerator tokenGenerator,
                              UserRepository userRepository) {
