@@ -6,7 +6,7 @@ import com.musicreview.api.models.UserEntity;
 import com.musicreview.api.repositories.RoleRepository;
 import com.musicreview.api.repositories.UserRepository;
 import com.musicreview.api.responses.AuthResponse;
-import com.musicreview.api.security.TokenGenerator;
+import com.musicreview.api.security.JWTTokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +29,15 @@ public class AuthController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TokenGenerator tokenGenerator;
+    private final JWTTokenGenerator jwtTokenGenerator;
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-                          RoleRepository roleRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator) {
+                          RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTTokenGenerator jwtTokenGenerator) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.tokenGenerator = tokenGenerator;
+        this.jwtTokenGenerator = jwtTokenGenerator;
     }
 
     @PostMapping("register")
@@ -63,7 +63,7 @@ public class AuthController {
                 .authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = tokenGenerator.generateToken(authentication);
+        String token = jwtTokenGenerator.generateToken(authentication);
 
         return new ResponseEntity<>(new AuthResponse(token), HttpStatus.OK);
     }

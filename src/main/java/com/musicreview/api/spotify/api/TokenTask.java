@@ -3,7 +3,9 @@ package com.musicreview.api.spotify.api;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.musicreview.api.config.SecretsConfigProperties;
 import com.musicreview.api.exceptions.TokenException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -14,10 +16,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.Scanner;
 
 @Component
 public class TokenTask {
+    private static SecretsConfigProperties secretsConfigProperties;
+    @Autowired
+    public TokenTask(SecretsConfigProperties secretsConfigProperties) {
+        TokenTask.secretsConfigProperties = secretsConfigProperties;
+    }
+
     public void getTokenFromApi(){
         String token = getTokenFromResponse(spotifyApiPostRequest());
         SpotifyApiHandler.setToken(token);
@@ -52,10 +59,8 @@ public class TokenTask {
     private static HttpURLConnection getHttpURLConnection() throws IOException {
         String endpoint = "https://accounts.spotify.com/api/token";
 
-        Scanner scanner = new Scanner(System.in);
-
-        String clientId = scanner.nextLine();
-        String clientSecret = scanner.nextLine();
+        String clientId = secretsConfigProperties.clientId();
+        String clientSecret = secretsConfigProperties.clientSecret();
 
         URL url = new URL(endpoint);
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class TokenGenerator {
+public class JWTTokenGenerator {
     public String generateToken(Authentication authentication){
         String username = authentication.getName();
         Date currentDate = new Date();

@@ -8,7 +8,7 @@ import com.musicreview.api.responses.ReviewResponse;
 import com.musicreview.api.exceptions.ReviewNotFoundException;
 import com.musicreview.api.models.Review;
 import com.musicreview.api.repositories.ReviewRepository;
-import com.musicreview.api.security.TokenGenerator;
+import com.musicreview.api.security.JWTTokenGenerator;
 import com.musicreview.api.services.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +26,13 @@ import static com.musicreview.api.security.JWTAuthenticationFilter.getJWTFromReq
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
-    private final TokenGenerator tokenGenerator;
+    private final JWTTokenGenerator jwtTokenGenerator;
     private final UserRepository userRepository;
     @Autowired
-    public ReviewServiceImpl(ReviewRepository reviewRepository, TokenGenerator tokenGenerator,
+    public ReviewServiceImpl(ReviewRepository reviewRepository, JWTTokenGenerator jwtTokenGenerator,
                              UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
-        this.tokenGenerator = tokenGenerator;
+        this.jwtTokenGenerator = jwtTokenGenerator;
         this.userRepository = userRepository;
     }
 
@@ -82,7 +82,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = mapToEntity(reviewDTO);
 
         String token = getJWTFromRequest(request);
-        String username = tokenGenerator.getUsernameFromJWT(token);
+        String username = jwtTokenGenerator.getUsernameFromJWT(token);
 
         UserEntity user = userRepository.findByUsername(username).
                     orElseThrow(() -> new UsernameNotFoundException("This user does not exist"));
@@ -100,7 +100,7 @@ public class ReviewServiceImpl implements ReviewService {
                 orElseThrow(() -> new ReviewNotFoundException("Could not update this review because it does not exist"));
 
         String token = getJWTFromRequest(request);
-        String username = tokenGenerator.getUsernameFromJWT(token);
+        String username = jwtTokenGenerator.getUsernameFromJWT(token);
 
         if (!review.getUser().getUsername().equals(username))
             throw new CustomAuthorisationException("You are not authorised to edit this review!");
@@ -120,7 +120,7 @@ public class ReviewServiceImpl implements ReviewService {
                 orElseThrow(() -> new ReviewNotFoundException("Could not delete this review because it does not exist"));
 
         String token = getJWTFromRequest(request);
-        String username = tokenGenerator.getUsernameFromJWT(token);
+        String username = jwtTokenGenerator.getUsernameFromJWT(token);
 
         if (!review.getUser().getUsername().equals(username))
             throw new CustomAuthorisationException("You are not authorised to edit this review!");
