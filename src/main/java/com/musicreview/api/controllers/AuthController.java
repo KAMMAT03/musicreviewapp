@@ -5,6 +5,8 @@ import com.musicreview.api.models.Role;
 import com.musicreview.api.models.UserEntity;
 import com.musicreview.api.repositories.RoleRepository;
 import com.musicreview.api.repositories.UserRepository;
+import com.musicreview.api.responses.AuthResponse;
+import com.musicreview.api.security.TokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +29,15 @@ public class AuthController {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private TokenGenerator tokenGenerator;
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-                          RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+                          RoleRepository roleRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.tokenGenerator = tokenGenerator;
     }
 
     @PostMapping("register")
@@ -54,12 +58,14 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@RequestBody UserDTO userDTO){
+    public ResponseEntity<AuthResponse> login(@RequestBody UserDTO userDTO){
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("Successful login", HttpStatus.OK);
+        String token = tokenGenerator.generateToken(authentication);
+
+        return new ResponseEntity<>(new AuthResponse(token), HttpStatus.OK);
     }
 
 }
