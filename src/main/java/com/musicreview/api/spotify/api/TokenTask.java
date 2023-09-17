@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.Scanner;
 
 @Component
 public class TokenTask {
@@ -51,8 +52,10 @@ public class TokenTask {
     private static HttpURLConnection getHttpURLConnection() throws IOException {
         String endpoint = "https://accounts.spotify.com/api/token";
 
-        String clientId = "secretid";
-        String clientSecret = "secretkey";
+        Scanner scanner = new Scanner(System.in);
+
+        String clientId = scanner.nextLine();
+        String clientSecret = scanner.nextLine();
 
         URL url = new URL(endpoint);
 
