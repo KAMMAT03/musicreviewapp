@@ -2,6 +2,8 @@ package com.musicreview.api.services.implementations;
 
 import com.musicreview.api.dto.ReviewDTO;
 import com.musicreview.api.dto.UserDTO;
+import com.musicreview.api.exceptions.CustomAuthorisationException;
+import com.musicreview.api.exceptions.TokenException;
 import com.musicreview.api.models.UserEntity;
 import com.musicreview.api.repositories.UserRepository;
 import com.musicreview.api.responses.ReviewResponse;
@@ -15,15 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.net.http.HttpRequest;
+import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -56,7 +53,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDTO> getReviewsByUserId(String userId, int pageNo, int pageSize) {
+    public List<ReviewDTO> getReviewsByUserId(long userId, int pageNo, int pageSize) {
+
         return null;
     }
 
@@ -88,9 +86,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDTO updateReview(ReviewDTO reviewDTO, long reviewId) {
+    public ReviewDTO updateReview(ReviewDTO reviewDTO, long reviewId, HttpServletRequest request) {
         Review review = reviewRepository.findById(reviewId).
                 orElseThrow(() -> new ReviewNotFoundException("Could not update this review because it does not exist"));
+
+        String token = getJWTFromRequest(request);
+        String username = tokenGenerator.getUsernameFromJWT(token);
+
+        if (!review.getUser().getUsername().equals(username))
+            throw new CustomAuthorisationException("You are not authorised to edit this review!");
 
         if (reviewDTO.getScore() != 0) review.setScore(reviewDTO.getScore());
         if (reviewDTO.getContent() != null) review.setContent(reviewDTO.getContent());
@@ -102,9 +106,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void deleteReview(long reviewId) {
+    public void deleteReview(long reviewId, HttpServletRequest request) {
         Review review = reviewRepository.findById(reviewId).
                 orElseThrow(() -> new ReviewNotFoundException("Could not delete this review because it does not exist"));
+
+        String token = getJWTFromRequest(request);
+        String username = tokenGenerator.getUsernameFromJWT(token);
+
+        if (!review.getUser().getUsername().equals(username))
+            throw new CustomAuthorisationException("You are not authorised to edit this review!");
 
         reviewRepository.delete(review);
     }

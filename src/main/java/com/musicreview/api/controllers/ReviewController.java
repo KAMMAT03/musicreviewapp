@@ -43,12 +43,13 @@ public class ReviewController {
                                                   @RequestBody ReviewDTO reviewDTO
     ){
 
-        return new ResponseEntity<>(reviewService.updateReview(reviewDTO, reviewId), HttpStatus.OK);
+        return new ResponseEntity<>(reviewService.updateReview(reviewDTO, reviewId, request), HttpStatus.OK);
     }
 
     @DeleteMapping("reviews/{reviewId}/delete")
-    public ResponseEntity<String> deleteReview(@PathVariable(value = "reviewId") long reviewId){
-        reviewService.deleteReview(reviewId);
+    public ResponseEntity<String> deleteReview(HttpServletRequest request,
+                                               @PathVariable(value = "reviewId") long reviewId){
+        reviewService.deleteReview(reviewId, request);
         return new ResponseEntity<>("Review deleted successfully", HttpStatus.OK);
     }
 }
