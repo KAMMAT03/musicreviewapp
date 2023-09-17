@@ -53,9 +53,16 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDTO> getReviewsByUserId(long userId, int pageNo, int pageSize) {
+    public ReviewResponse getReviewsByUserId(long userId, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Review> reviews = reviewRepository.findAllByUserId(userId, pageable);
+        List<Review> reviewList = reviews.getContent();
+        List<ReviewDTO> content = reviewList.stream().map(this::mapToDTO).toList();
 
-        return null;
+        ReviewResponse reviewResponse = mapToResponse(reviews);
+        reviewResponse.setContent(content);
+
+        return reviewResponse;
     }
 
     @Override

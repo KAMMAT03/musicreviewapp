@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ReviewService {
     ReviewResponse getReviewsByAlbumId(String albumId, int pageNo, int pageSize);
-    List<ReviewDTO> getReviewsByUserId(long userId, int pageNo, int pageSize);
+    ReviewResponse getReviewsByUserId(long userId, int pageNo, int pageSize);
     ReviewDTO getReviewById(long reviewId);
     ReviewDTO createReview(ReviewDTO reviewDTO, HttpServletRequest request);
     ReviewDTO updateReview(ReviewDTO reviewDTO, long reviewId, HttpServletRequest request);
