@@ -1,8 +1,5 @@
 package com.musicreview.api.controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.musicreview.api.dto.UserDTO;
 import com.musicreview.api.models.Role;
 import com.musicreview.api.models.UserEntity;
@@ -45,7 +42,6 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestBody UserDTO userDTO){
         if (userRepository.existsByUsername(userDTO.getUsername())) {
             String jsonBad = "{ \"code\": \"404\", \"message\": \"This username is already taken!\" }";
-            JsonObject jsonBadObject = new Gson().fromJson(jsonBad, JsonObject.class);
 
             return new ResponseEntity<>(jsonBad, HttpStatus.BAD_REQUEST);
         }
@@ -60,7 +56,6 @@ public class AuthController {
         userRepository.save(userEntity);
 
         String json = "{ \"code\": \"200\", \"message\": \"User registered successfully\" }";
-        JsonObject jsonObject = new Gson().fromJson(json, JsonObject.class);
 
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
