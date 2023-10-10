@@ -1,5 +1,8 @@
 package com.musicreview.api.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.musicreview.api.dto.UserDTO;
 import com.musicreview.api.models.Role;
 import com.musicreview.api.models.UserEntity;
@@ -15,10 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
@@ -40,10 +40,15 @@ public class AuthController {
         this.jwtTokenGenerator = jwtTokenGenerator;
     }
 
+    @CrossOrigin
     @PostMapping("register")
     public ResponseEntity<String> register(@RequestBody UserDTO userDTO){
-        if (userRepository.existsByUsername(userDTO.getUsername()))
-            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
+            String jsonBad = "{ \"code\": \"404\", \"message\": \"This username is already taken!\" }";
+            JsonObject jsonBadObject = new Gson().fromJson(jsonBad, JsonObject.class);
+
+            return new ResponseEntity<>(jsonBad, HttpStatus.BAD_REQUEST);
+        }
 
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(userDTO.getUsername());
@@ -54,7 +59,10 @@ public class AuthController {
 
         userRepository.save(userEntity);
 
-        return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+        String json = "{ \"code\": \"200\", \"message\": \"User registered successfully\" }";
+        JsonObject jsonObject = new Gson().fromJson(json, JsonObject.class);
+
+        return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
     @PostMapping("login")
