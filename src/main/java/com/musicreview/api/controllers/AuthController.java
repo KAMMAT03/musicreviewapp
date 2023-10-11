@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/auth/")
 public class AuthController {
@@ -37,7 +38,6 @@ public class AuthController {
         this.jwtTokenGenerator = jwtTokenGenerator;
     }
 
-    @CrossOrigin
     @PostMapping("register")
     public ResponseEntity<String> register(@RequestBody UserDTO userDTO){
         if (userRepository.existsByUsername(userDTO.getUsername())) {
@@ -55,7 +55,13 @@ public class AuthController {
 
         userRepository.save(userEntity);
 
-        String json = "{ \"code\": \"200\", \"message\": \"User registered successfully\" }";
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtTokenGenerator.generateToken(authentication);
+
+        String json = "{ \"code\": \"200\", \"token\": \"" + token + "\" }";
 
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
@@ -67,6 +73,8 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenGenerator.generateToken(authentication);
+
+//        String json = "{ \"code\": \"200\", \"token\": \"" + token + "\" }";
 
         return new ResponseEntity<>(new AuthResponse(token), HttpStatus.OK);
     }
