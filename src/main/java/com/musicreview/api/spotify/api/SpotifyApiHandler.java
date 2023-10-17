@@ -70,11 +70,11 @@ public class SpotifyApiHandler {
         return getAlbums(albumsObject);
     }
 
-    public static AlbumDTO extractAlbumDetailed(String response){
+    public static AlbumDTO extractAlbumInfo(String response, boolean detailed){
         JsonObject jsonObject = Optional.ofNullable(JsonParser.parseString(response).getAsJsonObject()).
                 orElseThrow(AlbumNotFoundException::new);
 
-        return getAlbumDto(jsonObject, true);
+        return getAlbumDto(jsonObject, detailed);
     }
 
     public static ArtistDTO extractArtistById(String response){

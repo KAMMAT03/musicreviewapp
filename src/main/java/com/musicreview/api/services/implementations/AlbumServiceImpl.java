@@ -22,7 +22,7 @@ public class AlbumServiceImpl implements AlbumService {
         String searchContent = "albums/" + id + "?market=PL";
         String response = SpotifyApiHandler.spotifyApiGetResponse(searchContent);
 
-        return SpotifyApiHandler.extractAlbumDetailed(response);
+        return SpotifyApiHandler.extractAlbumInfo(response, true);
     }
 
     private static AlbumResponse mapToResponse(List<AlbumDTO> albumDTOList, int pageNo, int pageSize){

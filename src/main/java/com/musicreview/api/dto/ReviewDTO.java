@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class ReviewDTO {
     private long id;
     private String albumId;
+    private AlbumDTO albumDetails;
     private String title;
     private String content;
     private int score;

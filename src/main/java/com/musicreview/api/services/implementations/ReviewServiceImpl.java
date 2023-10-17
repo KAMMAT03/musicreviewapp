@@ -1,5 +1,6 @@
 package com.musicreview.api.services.implementations;
 
+import com.musicreview.api.dto.AlbumDTO;
 import com.musicreview.api.dto.ReviewDTO;
 import com.musicreview.api.exceptions.CustomAuthorisationException;
 import com.musicreview.api.models.UserEntity;
@@ -10,6 +11,7 @@ import com.musicreview.api.models.Review;
 import com.musicreview.api.repositories.ReviewRepository;
 import com.musicreview.api.security.JWTTokenGenerator;
 import com.musicreview.api.services.ReviewService;
+import com.musicreview.api.spotify.api.SpotifyApiHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,7 +43,7 @@ public class ReviewServiceImpl implements ReviewService {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<Review> reviews = reviewRepository.findAllByAlbumId(albumId, pageable);
         List<Review> reviewList = reviews.getContent();
-        List<ReviewDTO> content = reviewList.stream().map(this::mapToDTO).toList();
+        List<ReviewDTO> content = reviewList.stream().map(review -> mapToDTO(review, false)).toList();
 
         ReviewResponse reviewResponse = mapToResponse(reviews);
         reviewResponse.setContent(content);
@@ -59,7 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         Page<Review> reviews = reviewRepository.findAllByUserId(userId, pageable);
         List<Review> reviewList = reviews.getContent();
-        List<ReviewDTO> content = reviewList.stream().map(this::mapToDTO).toList();
+        List<ReviewDTO> content = reviewList.stream().map(review -> mapToDTO(review, true)).toList();
 
         ReviewResponse reviewResponse = mapToResponse(reviews);
         reviewResponse.setContent(content);
@@ -72,7 +74,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId).
                 orElseThrow(() -> new ReviewNotFoundException("There is no review with this id"));
 
-        return mapToDTO(review);
+        return mapToDTO(review, false);
     }
 
     @Override
@@ -91,7 +93,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         Review newReview = reviewRepository.save(review);
 
-        return mapToDTO(newReview);
+        return mapToDTO(newReview, false);
     }
 
     @Override
@@ -111,7 +113,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         Review updatedReview = reviewRepository.save(review);
 
-        return mapToDTO(updatedReview);
+        return mapToDTO(updatedReview, false);
     }
 
     @Override
@@ -128,7 +130,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.delete(review);
     }
 
-    private ReviewDTO mapToDTO(Review review){
+    private ReviewDTO mapToDTO(Review review, boolean detailed){
         ReviewDTO reviewDTO = new ReviewDTO();
         reviewDTO.setId(review.getId());
         reviewDTO.setLikes(review.getLikes());
@@ -138,6 +140,9 @@ public class ReviewServiceImpl implements ReviewService {
         reviewDTO.setAlbumId(review.getAlbumId());
         reviewDTO.setDateOfPublication(review.getDateOfPublication());
         reviewDTO.setTitle(review.getTitle());
+
+        if (detailed) reviewDTO.setAlbumDetails(getAlbumInfo(review.getAlbumId()));
+
         return reviewDTO;
     }
 
@@ -161,5 +166,12 @@ public class ReviewServiceImpl implements ReviewService {
         reviewResponse.setTotalPages(reviews.getTotalPages());
         reviewResponse.setLast(reviews.isLast());
         return reviewResponse;
+    }
+
+    private AlbumDTO getAlbumInfo(String albumId){
+        String searchContent = "albums/" + albumId + "?market=PL";
+        String response = SpotifyApiHandler.spotifyApiGetResponse(searchContent);
+
+        return SpotifyApiHandler.extractAlbumInfo(response, false);
     }
 }
