@@ -40,8 +40,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewResponse getReviewsByAlbumId(String albumId, int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Review> reviews = reviewRepository.findAllByAlbumId(albumId, pageable);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        Page<Review> reviews = reviewRepository.findAllByAlbumIdOrderByDateOfPublicationDesc(albumId, pageable);
         List<Review> reviewList = reviews.getContent();
         List<ReviewDTO> content = reviewList.stream().map(review -> mapToDTO(review, false)).toList();
 
@@ -53,13 +53,13 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewResponse getReviewsByUsername(String username, int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
 
         UserEntity userEntity = userRepository.findByUsername(username).
                 orElseThrow(() -> new UsernameNotFoundException("There is no account with such username!"));
         long userId = userEntity.getId();
 
-        Page<Review> reviews = reviewRepository.findAllByUserId(userId, pageable);
+        Page<Review> reviews = reviewRepository.findAllByUserIdOrderByDateOfPublicationDesc(userId, pageable);
         List<Review> reviewList = reviews.getContent();
         List<ReviewDTO> content = reviewList.stream().map(review -> mapToDTO(review, true)).toList();
 
@@ -160,7 +160,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private ReviewResponse mapToResponse(Page<Review> reviews){
         ReviewResponse reviewResponse = new ReviewResponse();
-        reviewResponse.setPageNo(reviews.getNumber());
+        reviewResponse.setPageNo(reviews.getNumber() + 1);
         reviewResponse.setPageSize(reviews.getSize());
         reviewResponse.setTotalElements(reviews.getTotalElements());
         reviewResponse.setTotalPages(reviews.getTotalPages());

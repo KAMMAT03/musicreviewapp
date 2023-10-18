@@ -6,6 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    Page<Review> findAllByAlbumId(String albumId, Pageable pageable);
-    Page<Review> findAllByUserId(long userId, Pageable pageable);
+    Page<Review> findAllByAlbumIdOrderByDateOfPublicationDesc(String albumId, Pageable pageable);
+    Page<Review> findAllByUserIdOrderByDateOfPublicationDesc(long userId, Pageable pageable);
 }

@@ -32,7 +32,7 @@ public class ReviewController {
 
     @GetMapping("albums/{albumId}/reviews")
     public ResponseEntity<ReviewResponse> getReviewsByAlbumId(@PathVariable(value = "albumId") String albumId,
-                          @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                          @RequestParam(value = "pageNo", defaultValue = "1", required = false) int pageNo,
                               @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ){
         return new ResponseEntity<>(reviewService.getReviewsByAlbumId(albumId, pageNo, pageSize), HttpStatus.OK);
@@ -40,7 +40,7 @@ public class ReviewController {
 
     @GetMapping("users/{username}/reviews")
     public ResponseEntity<ReviewResponse> getReviewsByUserId(@PathVariable(value = "username") String username,
-                                  @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                  @RequestParam(value = "pageNo", defaultValue = "1", required = false) int pageNo,
                                   @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ){
         return new ResponseEntity<>(reviewService.getReviewsByUsername(username, pageNo, pageSize), HttpStatus.OK);
