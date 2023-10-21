@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/musicreviewapi</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="musicreviewapidb@musicreviewapidb.cak6phi2abvy.eu-north-1.rds.amazonaws.com" uuid="b85f873f-f411-49bd-ae33-23cae37d304d">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://musicreviewapidb.cak6phi2abvy.eu-north-1.rds.amazonaws.com:5432/musicreviewapidb</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

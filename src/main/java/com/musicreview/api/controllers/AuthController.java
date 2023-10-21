@@ -50,6 +50,12 @@ public class AuthController {
         userEntity.setUsername(userDTO.getUsername());
         userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
+        if (roleRepository.findByName("USER").isEmpty()) {
+            Role newRole = new Role();
+            newRole.setName("USER");
+            roleRepository.save(newRole);
+        }
+
         Role roles = roleRepository.findByName("USER").get();
         userEntity.setRoles(Collections.singletonList(roles));
 

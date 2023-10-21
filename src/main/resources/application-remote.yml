@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://musicreviewapidb.cak6phi2abvy.eu-north-1.rds.amazonaws.com:5432/musicreviewapidb
+    username: kammat
+    password: AWS-mr_DB83
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  jackson:
+    default-property-inclusion: non_null
+  config:
+    import: optional:secrets.properties
+
+server:
+  port: 5000
