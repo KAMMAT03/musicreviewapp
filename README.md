@@ -1,6 +1,9 @@
 # Music Review APP
 This is the backend for [Music Review APP](http://musicreviewapp.surge.sh) that provides the API.
 
+## What did I learn?
+This project required me to learn almost everything I know about Spring Boot, SpringJPA, Spring Security and REST APIs, as well as the pattern of designing such an application.
+
 ### Technologies used:
 - Java
 - Spring Boot
